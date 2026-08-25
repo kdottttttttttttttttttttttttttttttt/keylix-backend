@@ -6,7 +6,7 @@
   "version": "12.41",
   "port": 3551,
   "matchmakerPort": 3552,
-  "backendUrl": "http://127.0.0.1:3551",
+  "backendUrl": "https://keylix-backend.onrender.com",
   "shop": {
     "refreshIntervalHours": 24,
     "items": [

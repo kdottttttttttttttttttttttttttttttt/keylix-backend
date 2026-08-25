@@ -36,9 +36,9 @@ app.on('window-all-closed', () => app.quit());
 ipcMain.on('win:minimize', () => win.minimize());
 ipcMain.on('win:close', () => app.quit());
 
-// Config
+// Config - auto Render backend
 ipcMain.handle('get-config', () => ({
-  backendUrl: store.get('backendUrl', 'http://127.0.0.1:3551'),
+  backendUrl: store.get('backendUrl', 'https://keylix-backend.onrender.com'),
   fortnitePath: store.get('fortnitePath', ''),
   username: store.get('username', 'KeylixUser')
 }));

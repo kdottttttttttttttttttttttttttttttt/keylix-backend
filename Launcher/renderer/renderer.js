@@ -36,7 +36,7 @@ let cfg = {};
 async function loadCfg(){
   cfg = await window.keylix.getConfig();
   els.username.value = cfg.username || '';
-  els.backendUrl.value = cfg.backendUrl || 'http://127.0.0.1:3551';
+  els.backendUrl.value = cfg.backendUrl || 'https://keylix-backend.onrender.com';
   els.fortnitePath.value = cfg.fortnitePath || '';
   els.downloadUrl.value = cfg.downloadUrl || localStorage.getItem('downloadUrl') || 'https://example.com/keylix/12.41.zip';
   const m = await window.keylix.epicGetManifest();
