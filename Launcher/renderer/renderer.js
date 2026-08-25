@@ -1,8 +1,8 @@
 const els = {
   minBtn: document.getElementById('minBtn'),
   closeBtn: document.getElementById('closeBtn'),
-  statusDot: document.querySelector('#statusDot .dot'),
-  statusText: document.getElementById('statusDot'),
+  statusDot: document.getElementById('statusDot'),
+  statusText: document.getElementById('statusTxt'),
   playBtn: document.getElementById('playBtn'),
   toDownloadBtn: document.getElementById('toDownloadBtn'),
   dlBtn: document.getElementById('dlBtn'),
@@ -28,9 +28,47 @@ document.querySelectorAll('.nav').forEach(b => b.onclick = () => {
   document.querySelectorAll('.nav').forEach(x=>x.classList.remove('active'));
   document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
   b.classList.add('active');
-  document.getElementById('page-'+b.dataset.page).classList.add('active');
+  const p=document.getElementById('page-'+b.dataset.page);
+  if(p) p.classList.add('active');
+  if(b.dataset.page==='shop') loadShop();
 });
 els.toDownloadBtn.onclick = () => document.querySelector('[data-page="download"]').click();
+
+// Item Shop - live from backend
+async function loadShop(){
+  const grid=document.getElementById('shopGrid');
+  if(!grid) return;
+  grid.innerHTML='<div class="muted small">Loading shop...</div>';
+  try{
+    const r=await fetch(els.backendUrl.value + '/fortnite/api/storefront/v2/catalog');
+    const j=await r.json();
+    const entries=(j.storefronts && j.storefronts[0] && j.storefronts[0].catalogEntries) || [];
+    if(!entries.length) throw new Error('no entries');
+    grid.innerHTML='';
+    entries.forEach(e=>{
+      const price = e.prices && e.prices[0] ? e.prices[0].finalPrice : 0;
+      const name = (e.devName||e.offerId||'Item').replace('AthenaCharacter:','').replace('CID_','').slice(0,22);
+      const div=document.createElement('div');
+      div.style.cssText='background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;transition:all 0.2s;cursor:pointer';
+      div.onmouseenter=()=>{div.style.transform='translateY(-2px)';div.style.borderColor='var(--border2)'};
+      div.onmouseleave=()=>{div.style.transform='';div.style.borderColor='var(--border)'};
+      div.innerHTML=`<div style="height:90px;background:linear-gradient(135deg, var(--card2), var(--bg));border-radius:8px;display:grid;place-items:center;font-size:10px;color:var(--muted);font-weight:700;margin-bottom:8px">${name}</div><div style="font-size:11px;font-weight:800">${e.devName?e.devName.slice(0,28):e.offerId.slice(0,28)}</div><div style="font-size:11px;color:var(--gold);font-weight:800;margin-top:4px">${price===0?'FREE':price+' V-Bucks'}</div>`;
+      grid.appendChild(div);
+    });
+  }catch(err){
+    // fallback to config items
+    grid.innerHTML='';
+    const fallback=[
+      {name:'Meowscles', price:1200},{name:'Brutus', price:1200},{name:'TNTina', price:1200},{name:'Midas', price:1500},{name:'Skye', price:1200},{name:'Maya', price:1200}
+    ];
+    fallback.forEach(f=>{
+      const d=document.createElement('div');
+      d.style.cssText='background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px';
+      d.innerHTML=`<div style="height:90px;background:var(--card2);border-radius:8px;display:grid;place-items:center;font-size:11px;font-weight:800">${f.name}</div><div style="font-size:11px;font-weight:800;margin-top:8px">${f.name}</div><div style="color:var(--gold);font-size:11px;font-weight:800">${f.price} V-Bucks</div>`;
+      grid.appendChild(d);
+    });
+  }
+}
 
 let cfg = {};
 async function loadCfg(){
@@ -41,13 +79,70 @@ async function loadCfg(){
   els.downloadUrl.value = cfg.downloadUrl || localStorage.getItem('downloadUrl') || 'https://example.com/keylix/12.41.zip';
   const m = await window.keylix.epicGetManifest();
   if(document.getElementById('manifestId')) document.getElementById('manifestId').value = m;
+  // login wall
+  const wall=document.getElementById('loginWall');
+  const userLabel=document.getElementById('userLabel');
+  const settingsUser=document.getElementById('settingsUser');
+  if(cfg.isLoggedIn && cfg.username){
+    if(wall) wall.classList.add('hidden');
+    if(userLabel) userLabel.textContent=cfg.username;
+    if(settingsUser) settingsUser.textContent=cfg.username;
+    document.getElementById('welcomeName').textContent=cfg.username;
+  } else {
+    if(wall) wall.classList.remove('hidden');
+  }
   checkBackend();
 }
+function switchTab(t){
+  document.getElementById('tabLogin').classList.toggle('active', t==='login');
+  document.getElementById('tabSignup').classList.toggle('active', t==='signup');
+  document.getElementById('authBtn').textContent = t==='signup' ? 'Create Account' : 'Login';
+  document.getElementById('authEmail').style.display = t==='signup' ? 'block' : 'none';
+  window._authMode=t;
+}
+window.switchTab=switchTab;
+window._authMode='login';
+async function doAuth(){
+  const u=document.getElementById('authUser').value.trim();
+  const p=document.getElementById('authPass').value;
+  const e=document.getElementById('authEmail').value.trim();
+  const msg=document.getElementById('loginMsg');
+  if(!u||!p) return msg.textContent='Fill username + password';
+  msg.textContent='...';
+  const fn = window._authMode==='signup' ? window.keylix.keylixRegister : window.keylix.keylixLogin;
+  const r=await fn({ backendUrl: els.backendUrl.value, username:u, password:p, email:e });
+  if(r.ok){
+    msg.textContent='Success!';
+    els.username.value=u;
+    await window.keylix.saveConfig({ username:u, fortnitePath: els.fortnitePath.value });
+    document.getElementById('loginWall').classList.add('hidden');
+    document.getElementById('userLabel').textContent=u;
+    document.getElementById('settingsUser').textContent=u;
+    document.getElementById('welcomeName').textContent=u;
+    els.homeLog.textContent='Logged in as '+u;
+  } else msg.textContent='Failed: '+r.msg;
+}
+window.doAuth=doAuth;
+function logout(){
+  window.keylix.saveConfig({ username: '' });
+  localStorage.clear();
+  // clear store via main - just clear username
+  document.getElementById('loginWall').classList.remove('hidden');
+}
+window.logout=logout;
 async function checkBackend(){
   const ok = await window.keylix.checkBackend(els.backendUrl.value);
-  els.statusDot.className = 'dot ' + (ok ? 'online' : '');
-  els.statusText.lastChild.textContent = ' ' + (ok ? 'ONLINE' : 'OFFLINE');
-  els.homeLog.textContent = ok ? 'Backend online at ' + els.backendUrl.value : 'Backend offline - start backend with start.bat';
+  if(els.statusDot) els.statusDot.className = ok ? 'pulse online' : 'pulse';
+  if(els.statusText) els.statusText.textContent = ok ? 'ONLINE' : 'OFFLINE';
+  const pc = document.getElementById('playerCount');
+  if(pc) pc.textContent = ok ? '500 Players Online' : 'Offline';
+  if(document.getElementById('welcomeName') && els.username.value) document.getElementById('welcomeName').textContent = els.username.value;
+  const hpc=document.getElementById('homePlayerCount'); if(hpc) hpc.textContent = ok ? '500 Online' : 'Offline';
+  // sync visible settings fields
+  const b2=document.getElementById('backendUrl2'); if(b2) b2.value=els.backendUrl.value;
+  const f2=document.getElementById('fortnitePath2'); if(f2) f2.value=els.fortnitePath.value;
+  const d2=document.getElementById('downloadUrl2'); if(d2) d2.value=els.downloadUrl.value;
+  els.homeLog.textContent = ok ? 'Online • Ready to launch' : 'Offline • Retrying...';
 }
 loadCfg();
 els.backendUrl.onchange = checkBackend;

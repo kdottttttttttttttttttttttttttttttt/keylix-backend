@@ -2,143 +2,86 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Keylix Launcher</title>
+<title>Keylix</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="titlebar">
-  <div class="title">PROJECT KEYLIX</div>
-  <div class="controls">
-    <button id="minBtn">—</button>
-    <button id="closeBtn">✕</button>
+<!-- LOGIN WALL -->
+<div id="loginWall">
+  <div class="login-box">
+    <div class="login-logo" style="background:none;box-shadow:none;padding:0"><img src="icon.png" style="width:64px;height:64px;border-radius:14px;box-shadow:0 12px 30px rgba(108,92,255,0.35)"></div>
+    <h1>Welcome to Keylix</h1>
+    <p>Chapter 2 Season 2 • Top Secret</p>
+    <div class="tabs">
+      <button class="tab active" id="tabLogin" onclick="switchTab('login')">Login</button>
+      <button class="tab" id="tabSignup" onclick="switchTab('signup')">Sign Up</button>
+    </div>
+    <input id="authUser" placeholder="Username">
+    <input id="authPass" type="password" placeholder="Password">
+    <input id="authEmail" placeholder="Email (sign up only)" style="display:none">
+    <button class="btn-login" id="authBtn" onclick="doAuth()">Login</button>
+    <div class="login-msg" id="loginMsg"></div>
+    <div class="login-foot">Secure • Encrypted • No Epic needed</div>
   </div>
 </div>
 
+<div class="titlebar"><b>KEYLIX</b><div class="controls"><button id="minBtn">—</button><button id="closeBtn">✕</button></div></div>
 <div class="layout">
   <nav class="sidebar">
-    <div class="logo">
-      <div class="logo-k">K</div>
-      <div class="logo-text"><b>KEYLIX</b><span>C2S2 • TOP SECRET</span></div>
-    </div>
-    <button class="nav active" data-page="home"><span>⌖</span> Play</button>
-    <button class="nav" data-page="download"><span>⬇</span> Download</button>
-    <button class="nav" data-page="settings"><span>⚙</span> Settings</button>
+    <div class="logo"><img src="icon.png" style="width:38px;height:38px;border-radius:10px;box-shadow:0 4px 16px rgba(108,92,255,0.25)"><div class="logo-type"><b>KEYLIX</b><span>C2S2 • 12.41</span></div></div>
+    <button class="nav active" data-page="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/></svg> Home</button>
+    <button class="nav" data-page="shop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2l3 6v14a2 2 0 002 2h6a2 2 0 002-2V8l3-6z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 01-8 0"/></svg> Item Shop</button>
+    <button class="nav" data-page="download"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 12.8V3"/></svg> Library</button>
+    <button class="nav" data-page="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2"/></svg> Settings</button>
     <div class="sidebar-footer">
-      <div id="statusDot" class="status"><span class="dot"></span> Checking...</div>
-      <div class="ver">v1.0.0 • 12.41</div>
+      <div class="status"><div id="statusDot" class="dot"></div><span id="statusTxt">Checking</span></div>
+      <div class="ver"><span>v1.0</span><span id="userLabel"></span></div>
+      <button onclick="logout()" style="margin-top:8px;width:100%;padding:6px;background:transparent;border:1px solid var(--border);border-radius:8px;color:var(--muted);font-size:11px;cursor:pointer">Logout</button>
     </div>
   </nav>
-
   <main class="content">
-    <!-- HOME -->
     <div id="page-home" class="page active">
-      <div class="hero" style="background: linear-gradient(90deg,#0a0a0f 0%, transparent 60%), url('https://cdn2.unrealengine.com/Fortnite/fortnite-game/battleroyalenews/c2s2-keyart-1024x512-1024x512.jpg') center/cover">
-        <div class="hero-text">
-          <h1>CHAPTER 2<br><span>SEASON 2</span></h1>
-          <p>TOP SECRET • GHOST vs SHADOW • Become Midas</p>
-          <div class="hero-actions">
-            <button id="playBtn" class="btn primary">▶ PLAY</button>
-            <button id="toDownloadBtn" class="btn ghost">Download Build</button>
-          </div>
+      <div class="hero"><div class="hero-bg"></div><div class="hero-inner"><div class="badge">SEASON 12 LIVE • TOP SECRET</div><h1>CHAPTER 2<br><span>SEASON 2</span></h1><p>GHOST vs SHADOW • BECOME MIDAS</p><div class="hero-actions"><button id="playBtn" class="btn primary">▶ PLAY</button><button id="toDownloadBtn" class="btn ghost">Library</button></div></div></div>
+      <!-- BATTLE PASS - C2S2 -->
+      <div style="margin-top:14px;background:linear-gradient(135deg, #1a102e 0%, #0f1420 100%);border:1px solid var(--border);border-radius:14px;padding:16px;position:relative;overflow:hidden">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <h3 style="font-size:12px;letter-spacing:1px;display:flex;align-items:center;gap:8px"><span style="width:3px;height:14px;background:var(--gold);border-radius:2px;display:inline-block"></span> BATTLE PASS • C2S2</h3>
+          <span style="font-size:11px;background:var(--gold);color:#000;padding:3px 8px;border-radius:20px;font-weight:800">LEVEL 100</span>
         </div>
-        <div class="agent-badge">AGENT PEELY • BRUTUS • TNTINA<br>MEOWSCLES • SKYE • MIDAS</div>
-      </div>
-      <div class="cards">
-        <div class="card"><h3>Battle Pass</h3><p>All 100 tiers unlocked instantly</p></div>
-        <div class="card"><h3>Spy Games</h3><p>Operation LTM active</p></div>
-        <div class="card"><h3>Build</h3><p>12.41 • 20GB • Win64</p></div>
-      </div>
-      <!-- Keylix Account (own creation, no Epic needed) -->
-      <div class="build-card" style="margin-top:14px;background:#111117">
-        <div style="flex:1">
-          <h3>Keylix Account</h3>
-          <p class="muted small">Create your own account in launcher - no Epic needed to play</p>
-          <div class="row" style="margin-top:8px">
-            <input id="kUsername" placeholder="Username">
-            <input id="kPassword" type="password" placeholder="Password">
-          </div>
-          <div class="row" style="margin-top:6px">
-            <input id="kEmail" placeholder="Email (optional)">
-          </div>
-          <div id="kAuthMsg" class="muted small" style="margin-top:6px"></div>
+        <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:8px">
+          <div style="text-align:center"><div style="height:70px;background:linear-gradient(180deg, #2a1f4d, #1a102e);border:1px solid var(--border);border-radius:10px;display:grid;place-items:center;font-size:10px;color:var(--gold);font-weight:800">MIDAS<br><span style="font-size:8px;color:var(--muted)">TIER 100</span></div><small style="font-size:9px;color:var(--muted)">Midas</small></div>
+          <div style="text-align:center"><div style="height:70px;background:var(--card2);border:1px solid var(--border);border-radius:10px;display:grid;place-items:center;font-size:10px">MEOWSCLES<br><span style="font-size:8px;color:var(--muted)">TIER 60</span></div><small style="font-size:9px;color:var(--muted)">Meowscles</small></div>
+          <div style="text-align:center"><div style="height:70px;background:var(--card2);border:1px solid var(--border);border-radius:10px;display:grid;place-items:center;font-size:10px">BRUTUS<br><span style="font-size:8px;color:var(--muted)">TIER 20</span></div><small style="font-size:9px;color:var(--muted)">Brutus</small></div>
+          <div style="text-align:center"><div style="height:70px;background:var(--card2);border:1px solid var(--border);border-radius:10px;display:grid;place-items:center;font-size:10px">TNTINA<br><span style="font-size:8px;color:var(--muted)">TIER 40</span></div><small style="font-size:9px;color:var(--muted)">TNTina</small></div>
+          <div style="text-align:center"><div style="height:70px;background:var(--card2);border:1px solid var(--border);border-radius:10px;display:grid;place-items:center;font-size:10px">SKYE<br><span style="font-size:8px;color:var(--muted)">TIER 80</span></div><small style="font-size:9px;color:var(--muted)">Skye</small></div>
+          <div style="text-align:center"><div style="height:70px;background:var(--card2);border:1px solid var(--border);border-radius:10px;display:grid;place-items:center;font-size:10px">MAYA<br><span style="font-size:8px;color:var(--muted)">TIER 1</span></div><small style="font-size:9px;color:var(--muted)">Maya</small></div>
+          <div style="text-align:center"><div style="height:70px;background:linear-gradient(135deg, var(--gold), #ffb700);border-radius:10px;display:grid;place-items:center;font-size:10px;color:#000;font-weight:800">100%<br>UNLOCKED</div><small style="font-size:9px;color:var(--gold)">All Skins</small></div>
         </div>
-        <div class="build-actions" style="justify-content:center">
-          <button id="registerBtn" class="btn primary">Create Account</button>
-          <button id="loginBtn" class="btn ghost">Login</button>
-        </div>
+        <div style="margin-top:12px;height:6px;background:var(--bg);border-radius:10px;overflow:hidden"><div style="width:100%;height:100%;background:linear-gradient(90deg, var(--gold), var(--gold2))"></div></div>
+        <small style="font-size:10px;color:var(--muted)">100/100 Tiers • 9999 Battle Stars • Ghost vs Shadow variants included</small>
       </div>
-      <div class="log" id="homeLog">Ready. Create account above or login, then hit PLAY.</div>
+      <div class="stats"><div class="stat"><h3>SPY GAMES</h3><p>Operation Active</p></div><div class="stat"><h3>BUILD</h3><p>12.41 • 20GB</p></div><div class="stat"><h3>PLAYERS</h3><p id="homePlayerCount">500 Online</p></div></div>
+      <div class="log" id="homeLog">Ready.</div>
     </div>
-
-    <!-- DOWNLOAD -->
+    <div id="page-shop" class="page">
+      <h3 style="display:flex;justify-content:space-between;align-items:center">Item Shop <span style="font-size:11px;color:var(--muted);font-weight:600" id="shopRefresh">Daily • 12.41</span></h3>
+      <p class="muted small" style="margin:4px 0 12px">Live from Keylix backend • C2S2 Top Secret</p>
+      <div id="shopGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px"></div>
+      <div class="help" style="margin-top:10px;font-size:10px;color:var(--dim);text-align:center">Shop refreshes daily at backend • Prices in V-Bucks</div>
+    </div>
     <div id="page-download" class="page">
-      <h2>Download Builds</h2>
-      <p class="muted">Like Retrac - one click download. Now with Epic CDN direct.</p>
-      
-      <!-- EPIC CDN DOWNLOAD (NEW) -->
-      <div class="build-card" style="border-color:#f1c84b;background:linear-gradient(135deg,#111117,#1a1600)">
-        <div class="build-info">
-          <h3>⬇ Download from Epic CDN (No host needed)</h3>
-          <span class="size" style="background:#f1c84b;color:#000">RECOMMENDED</span>
-          <p>Pulls 12.41 directly from Epic using your Epic account (must own Fortnite). No zip host.</p>
-          <div class="row" style="margin-top:8px">
-            <input id="epicEmail" placeholder="Epic email (owns Fortnite)" style="flex:1">
-            <input id="epicPass" type="password" placeholder="Password" style="flex:1">
-          </div>
-          <div class="row" style="margin-top:6px">
-            <input id="manifestId" placeholder="Manifest ID" value="++Fortnite+Release-12.41-CL-12905930-Windows" title="Manifest for C2S2 12.41">
-          </div>
-          <div class="progress-wrap hidden" id="epicProgWrap">
-            <div class="progress"><div id="epicProgBar"></div></div>
-            <div id="epicProgText">0%</div>
-            <div id="epicProgStatus" class="muted small"></div>
-          </div>
-        </div>
-        <div class="build-actions">
-          <button id="epicDlBtn" class="btn primary" style="background:#f1c84b;color:#000">⬇ Epic Pull</button>
-          <button id="epicHelpBtn" class="btn ghost" style="font-size:11px">Help</button>
-        </div>
-      </div>
-
-      <div class="build-card" style="margin-top:12px">
-        <div class="build-info">
-          <h3>Chapter 2 Season 2 (12.41) - Top Secret</h3>
-          <span class="size">~20GB • Alt</span>
-          <p>Via hosted zip (S3/Drive). Set link in Settings if you host it.</p>
-          <div class="progress-wrap hidden" id="progWrap">
-            <div class="progress"><div id="progBar"></div></div>
-            <div id="progText">0%</div>
-            <div id="progStatus" class="muted small"></div>
-          </div>
-        </div>
-        <div class="build-actions">
-          <button id="dlBtn" class="btn ghost">⬇ Hosted Zip</button>
-          <button id="locateBtn" class="btn ghost">Locate Existing</button>
-        </div>
-      </div>
-      <div class="help">Epic CDN = pulls clean files legally from Epic. Hosted Zip = you upload 12.41.zip to Drive and paste link in Settings.</div>
+      <h3>Library</h3>
+      <div class="build-card"><div class="build-info"><h3>Epic Pull <span style="font-size:10px;background:var(--gold);color:#000;padding:2px 6px;border-radius:10px;margin-left:6px">RECOMMENDED</span></h3><p>Direct from Epic CDN</p><div style="display:flex;gap:6px;margin-top:8px"><input id="epicEmail" placeholder="Epic email"><input id="epicPass" type="password" placeholder="Password"></div><div style="margin-top:6px"><input id="manifestId" value="++Fortnite+Release-12.41-CL-12905930-Windows"></div><div class="progress-wrap hidden" id="epicProgWrap"><div class="progress"><div id="epicProgBar"></div></div><div id="epicProgText">0%</div><small id="epicProgStatus"></small></div></div><div class="build-actions"><button id="epicDlBtn" class="btn primary">Download</button><button id="epicHelpBtn" class="btn ghost" style="font-size:11px">Help</button></div></div>
+      <div class="build-card"><div class="build-info"><h3>Hosted Build</h3><p>From your CDN (locked)</p><div class="progress-wrap hidden" id="progWrap"><div class="progress"><div id="progBar"></div></div><div id="progText">0%</div><small id="progStatus"></small></div></div><div class="build-actions"><button id="dlBtn" class="btn ghost">Download</button><button id="locateBtn" class="btn ghost">Locate</button></div></div>
     </div>
-
-    <!-- SETTINGS -->
     <div id="page-settings" class="page">
-      <h2>Settings</h2>
-      <label>Keylix Account (for PLAY)</label>
-      <div class="row">
-        <input id="username" placeholder="Username (from Home register)">
-        <input id="usernamePass" type="password" placeholder="Password">
-      </div>
-      <p class="muted small">This is your Keylix launcher account (created on Home), not Epic.</p>
-      <label>Backend URL</label>
-      <input id="backendUrl" placeholder="http://127.0.0.1:3551">
-      <div class="row">
-        <input id="fortnitePath" placeholder="Fortnite path e.g. D:\Keylix\Fortnite" readonly>
-        <button id="browseBtn" class="btn ghost">Browse</button>
-      </div>
-      <label>Hosted Build URL (your S3/Drive link - no Epic login needed)</label>
-      <input id="downloadUrl" placeholder="https://your-cdn.com/keylix/12.41.zip">
-      <p class="muted small">Upload your 12.41.zip to R2/S3/Drive and paste direct link here. Users download without Epic. <b>You host it.</b></p>
-      <button id="saveBtn" class="btn primary">Save</button>
-      <div id="saveMsg" class="muted"></div>
+      <h3>Settings</h3>
+      <label>Account</label><div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px;display:flex;justify-content:space-between;align-items:center"><span id="settingsUser">Not logged in</span><button onclick="logout()" class="btn ghost" style="padding:6px 12px;font-size:11px">Logout</button></div>
+      <label>Fortnite Path</label><div style="display:flex;gap:8px"><input id="fortnitePath" readonly style="flex:1"><button id="browseBtn" class="btn ghost">Browse</button></div>
+      <div style="display:none"><input id="backendUrl" value="https://keylix-backend.onrender.com"></div>
+      <!-- hidden keeps logic -->
+      <input id="username" style="display:none"><input id="usernamePass" style="display:none"><input id="downloadUrl" style="display:none"><input id="kUsername" style="display:none"><input id="kPassword" style="display:none"><input id="kEmail" style="display:none"><span id="kAuthMsg" style="display:none"></span><button id="registerBtn" style="display:none"></button><button id="loginBtn" style="display:none"></button><span id="saveMsg" style="display:none"></span><button id="saveBtn" style="display:none"></button><input id="fortnitePath2" style="display:none"><input id="downloadUrl2" style="display:none"><input id="backendUrl2" style="display:none"><span id="saveMsg2" style="display:none"></span><button id="saveBtn2" style="display:none"></button>
+      <div style="display:none"><input id="downloadUrlLocked" value="https://your-cdn.com/12.41.zip"><input id="downloadUrl" style="display:none"></div>
     </div>
   </main>
 </div>
