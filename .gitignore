@@ -1,0 +1,10 @@
+node_modules/
+dist/
+Keylix-Launcher-Portable.zip
+Keylix-Launcher-Portable/
+Launcher/dist/
+Launcher/node_modules/
+data/accounts.json
+.env
+*.log
+.DS_Store

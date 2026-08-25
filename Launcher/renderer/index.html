@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Keylix Launcher</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="titlebar">
+  <div class="title">PROJECT KEYLIX</div>
+  <div class="controls">
+    <button id="minBtn">—</button>
+    <button id="closeBtn">✕</button>
+  </div>
+</div>
+
+<div class="layout">
+  <nav class="sidebar">
+    <div class="logo">
+      <div class="logo-k">K</div>
+      <div class="logo-text"><b>KEYLIX</b><span>C2S2 • TOP SECRET</span></div>
+    </div>
+    <button class="nav active" data-page="home"><span>⌖</span> Play</button>
+    <button class="nav" data-page="download"><span>⬇</span> Download</button>
+    <button class="nav" data-page="settings"><span>⚙</span> Settings</button>
+    <div class="sidebar-footer">
+      <div id="statusDot" class="status"><span class="dot"></span> Checking...</div>
+      <div class="ver">v1.0.0 • 12.41</div>
+    </div>
+  </nav>
+
+  <main class="content">
+    <!-- HOME -->
+    <div id="page-home" class="page active">
+      <div class="hero" style="background: linear-gradient(90deg,#0a0a0f 0%, transparent 60%), url('https://cdn2.unrealengine.com/Fortnite/fortnite-game/battleroyalenews/c2s2-keyart-1024x512-1024x512.jpg') center/cover">
+        <div class="hero-text">
+          <h1>CHAPTER 2<br><span>SEASON 2</span></h1>
+          <p>TOP SECRET • GHOST vs SHADOW • Become Midas</p>
+          <div class="hero-actions">
+            <button id="playBtn" class="btn primary">▶ PLAY</button>
+            <button id="toDownloadBtn" class="btn ghost">Download Build</button>
+          </div>
+        </div>
+        <div class="agent-badge">AGENT PEELY • BRUTUS • TNTINA<br>MEOWSCLES • SKYE • MIDAS</div>
+      </div>
+      <div class="cards">
+        <div class="card"><h3>Battle Pass</h3><p>All 100 tiers unlocked instantly</p></div>
+        <div class="card"><h3>Spy Games</h3><p>Operation LTM active</p></div>
+        <div class="card"><h3>Build</h3><p>12.41 • 20GB • Win64</p></div>
+      </div>
+      <!-- Keylix Account (own creation, no Epic needed) -->
+      <div class="build-card" style="margin-top:14px;background:#111117">
+        <div style="flex:1">
+          <h3>Keylix Account</h3>
+          <p class="muted small">Create your own account in launcher - no Epic needed to play</p>
+          <div class="row" style="margin-top:8px">
+            <input id="kUsername" placeholder="Username">
+            <input id="kPassword" type="password" placeholder="Password">
+          </div>
+          <div class="row" style="margin-top:6px">
+            <input id="kEmail" placeholder="Email (optional)">
+          </div>
+          <div id="kAuthMsg" class="muted small" style="margin-top:6px"></div>
+        </div>
+        <div class="build-actions" style="justify-content:center">
+          <button id="registerBtn" class="btn primary">Create Account</button>
+          <button id="loginBtn" class="btn ghost">Login</button>
+        </div>
+      </div>
+      <div class="log" id="homeLog">Ready. Create account above or login, then hit PLAY.</div>
+    </div>
+
+    <!-- DOWNLOAD -->
+    <div id="page-download" class="page">
+      <h2>Download Builds</h2>
+      <p class="muted">Like Retrac - one click download. Now with Epic CDN direct.</p>
+      
+      <!-- EPIC CDN DOWNLOAD (NEW) -->
+      <div class="build-card" style="border-color:#f1c84b;background:linear-gradient(135deg,#111117,#1a1600)">
+        <div class="build-info">
+          <h3>⬇ Download from Epic CDN (No host needed)</h3>
+          <span class="size" style="background:#f1c84b;color:#000">RECOMMENDED</span>
+          <p>Pulls 12.41 directly from Epic using your Epic account (must own Fortnite). No zip host.</p>
+          <div class="row" style="margin-top:8px">
+            <input id="epicEmail" placeholder="Epic email (owns Fortnite)" style="flex:1">
+            <input id="epicPass" type="password" placeholder="Password" style="flex:1">
+          </div>
+          <div class="row" style="margin-top:6px">
+            <input id="manifestId" placeholder="Manifest ID" value="++Fortnite+Release-12.41-CL-12905930-Windows" title="Manifest for C2S2 12.41">
+          </div>
+          <div class="progress-wrap hidden" id="epicProgWrap">
+            <div class="progress"><div id="epicProgBar"></div></div>
+            <div id="epicProgText">0%</div>
+            <div id="epicProgStatus" class="muted small"></div>
+          </div>
+        </div>
+        <div class="build-actions">
+          <button id="epicDlBtn" class="btn primary" style="background:#f1c84b;color:#000">⬇ Epic Pull</button>
+          <button id="epicHelpBtn" class="btn ghost" style="font-size:11px">Help</button>
+        </div>
+      </div>
+
+      <div class="build-card" style="margin-top:12px">
+        <div class="build-info">
+          <h3>Chapter 2 Season 2 (12.41) - Top Secret</h3>
+          <span class="size">~20GB • Alt</span>
+          <p>Via hosted zip (S3/Drive). Set link in Settings if you host it.</p>
+          <div class="progress-wrap hidden" id="progWrap">
+            <div class="progress"><div id="progBar"></div></div>
+            <div id="progText">0%</div>
+            <div id="progStatus" class="muted small"></div>
+          </div>
+        </div>
+        <div class="build-actions">
+          <button id="dlBtn" class="btn ghost">⬇ Hosted Zip</button>
+          <button id="locateBtn" class="btn ghost">Locate Existing</button>
+        </div>
+      </div>
+      <div class="help">Epic CDN = pulls clean files legally from Epic. Hosted Zip = you upload 12.41.zip to Drive and paste link in Settings.</div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div id="page-settings" class="page">
+      <h2>Settings</h2>
+      <label>Keylix Account (for PLAY)</label>
+      <div class="row">
+        <input id="username" placeholder="Username (from Home register)">
+        <input id="usernamePass" type="password" placeholder="Password">
+      </div>
+      <p class="muted small">This is your Keylix launcher account (created on Home), not Epic.</p>
+      <label>Backend URL</label>
+      <input id="backendUrl" placeholder="http://127.0.0.1:3551">
+      <div class="row">
+        <input id="fortnitePath" placeholder="Fortnite path e.g. D:\Keylix\Fortnite" readonly>
+        <button id="browseBtn" class="btn ghost">Browse</button>
+      </div>
+      <label>Hosted Build URL (your S3/Drive link - no Epic login needed)</label>
+      <input id="downloadUrl" placeholder="https://your-cdn.com/keylix/12.41.zip">
+      <p class="muted small">Upload your 12.41.zip to R2/S3/Drive and paste direct link here. Users download without Epic. <b>You host it.</b></p>
+      <button id="saveBtn" class="btn primary">Save</button>
+      <div id="saveMsg" class="muted"></div>
+    </div>
+  </main>
+</div>
+<script src="renderer.js"></script>
+</body>
+</html>

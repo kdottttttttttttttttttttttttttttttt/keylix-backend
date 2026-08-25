@@ -1,0 +1,42 @@
+{
+  "name": "Project Keylix",
+  "displaySeason": "Chapter 2 Season 2",
+  "theme": "Top Secret",
+  "season": 12,
+  "version": "12.41",
+  "port": 3551,
+  "matchmakerPort": 3552,
+  "backendUrl": "http://127.0.0.1:3551",
+  "shop": {
+    "refreshIntervalHours": 24,
+    "items": [
+      { "id": "CID_693_Athena_Commando_M_Kit", "price": 1200, "type": "outfit", "name": "Meowscles" },
+      { "id": "CID_691_Athena_Commando_M_SpyBrute", "price": 1200, "type": "outfit", "name": "Brutus" },
+      { "id": "CID_692_Athena_Commando_F_SpyTNTina", "price": 1200, "type": "outfit", "name": "TNTina" },
+      { "id": "CID_690_Athena_Commando_M_UltraThief", "price": 1500, "type": "outfit", "name": "Midas" },
+      { "id": "CID_694_Athena_Commando_F_Skye", "price": 1200, "type": "outfit", "name": "Skye" },
+      { "id": "CID_695_Athena_Commando_F_YachtSpy", "price": 1200, "type": "outfit", "name": "Maya" },
+      { "id": "Pickaxe_ID_108_SpyTech", "price": 800, "type": "pickaxe", "name": "Shadow Titan" },
+      { "id": "AthenaGlider:Glider_ID_090_SpyUmbrella", "price": 0, "type": "glider", "name": "Top Secret Umbrella" }
+    ]
+  },
+  "battlePass": {
+    "enabled": true,
+    "seasonLevel": 100,
+    "bookLevel": 100,
+    "bookPurchased": true,
+    "battlestars": 9999
+  },
+  "timeline": {
+    "seasonBegin": "2020-02-20T00:00:00.000Z",
+    "seasonEnd": "2030-01-01T00:00:00.000Z",
+    "seasonDisplayedEnd": "2030-01-01T00:00:00.000Z",
+    "lobbyBackground": "c2s2_topsecret"
+  },
+  "features": {
+    "arena": true,
+    "creative": true,
+    "battleRoyale": true,
+    "spyGames": true
+  }
+}

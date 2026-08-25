@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: keylix-backend
+    env: node
+    plan: free
+    region: frankfurt # or oregon / singapore - pick closest
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /
+    envVars:
+      - key: PORT
+        sync: false # Render sets this automatically to 10000
+      - key: JWT_SECRET
+        generateValue: true
+      - key: BACKEND_URL
+        sync: false # set after first deploy to https://keylix-backend.onrender.com

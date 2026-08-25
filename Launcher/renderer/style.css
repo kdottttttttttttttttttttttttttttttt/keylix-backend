@@ -1,0 +1,56 @@
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',system-ui,sans-serif}
+body{background:#0a0a0f;color:#e8e8ef;overflow:hidden}
+.titlebar{height:32px;background:#0f0f14;display:flex;justify-content:space-between;align-items:center;padding:0 12px;-webkit-app-region:drag;border-bottom:1px solid #1c1c24}
+.title{font-size:11px;letter-spacing:4px;font-weight:800;color:#f1c84b}
+.controls button{-webkit-app-region:no-drag;background:transparent;border:none;color:#888;width:32px;height:32px;cursor:pointer}
+.controls button:hover{color:#fff;background:#1a1a22}
+.layout{display:flex;height:calc(100vh - 32px)}
+.sidebar{width:210px;background:#0f0f14;border-right:1px solid #1c1c24;padding:18px 12px;display:flex;flex-direction:column;gap:6px}
+.logo{display:flex;gap:10px;align-items:center;margin-bottom:20px}
+.logo-k{width:36px;height:36px;background:linear-gradient(135deg,#f1c84b,#ff6b35);display:grid;place-items:center;font-weight:900;color:#000;border-radius:6px}
+.logo-text b{display:block;font-size:14px;letter-spacing:2px}
+.logo-text span{font-size:10px;color:#888;letter-spacing:1px}
+.nav{background:transparent;border:none;color:#9aa;text-align:left;padding:10px 12px;border-radius:8px;cursor:pointer;display:flex;gap:10px;font-size:13px}
+.nav.active,.nav:hover{background:#1a1a22;color:#fff}
+.sidebar-footer{margin-top:auto;padding-top:16px;border-top:1px solid #1c1c24}
+.status{font-size:11px;display:flex;gap:6px;align-items:center}
+.dot{width:8px;height:8px;border-radius:50%;background:#ff3b3b;display:inline-block}
+.dot.online{background:#1ed760}
+.ver{font-size:10px;color:#555;margin-top:4px}
+.content{flex:1;padding:22px;overflow:auto;background:radial-gradient(800px 400px at 20% 0%, #1a1a22 0%, transparent 70%), #0a0a0f}
+.page{display:none}
+.page.active{display:block}
+.hero{height:320px;border-radius:16px;padding:28px;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden;border:1px solid #1c1c24}
+.hero h1{font-size:42px;line-height:0.9;font-weight:900}
+.hero h1 span{color:#f1c84b}
+.hero p{margin:10px 0 18px;color:#bbb;letter-spacing:2px;font-size:11px}
+.hero-actions{display:flex;gap:10px}
+.agent-badge{position:absolute;right:18px;bottom:18px;font-size:10px;letter-spacing:1px;color:#ccc;background:rgba(0,0,0,0.6);padding:8px 10px;border-radius:8px;text-align:right;border:1px solid rgba(255,255,255,0.1)}
+.btn{padding:10px 18px;border-radius:8px;border:none;cursor:pointer;font-weight:700;font-size:12px;letter-spacing:1px}
+.btn.primary{background:#f1c84b;color:#000}
+.btn.primary:hover{background:#ffd65a}
+.btn.ghost{background:transparent;color:#fff;border:1px solid #2a2a34}
+.btn.ghost:hover{background:#1a1a22}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+.card{background:#111117;border:1px solid #1c1c24;border-radius:12px;padding:14px}
+.card h3{font-size:12px;color:#f1c84b;letter-spacing:1px}
+.card p{font-size:12px;color:#888;margin-top:4px}
+.log{margin-top:14px;background:#111117;border:1px solid #1c1c24;border-radius:8px;padding:10px;font-size:11px;color:#888;font-family:consolas,monospace}
+.build-card{background:#111117;border:1px solid #1c1c24;border-radius:14px;padding:18px;display:flex;justify-content:space-between;gap:16px}
+.build-info h3{font-size:14px}
+.size{background:#1c1c24;padding:2px 8px;border-radius:20px;font-size:10px;color:#f1c84b;margin-left:8px}
+.build-info p{color:#888;font-size:12px;margin:8px 0}
+.progress-wrap{margin-top:12px}
+.progress{height:8px;background:#0a0a0f;border-radius:20px;overflow:hidden;border:1px solid #1c1c24}
+#progBar{height:100%;width:0;background:#f1c84b;transition:width 0.2s}
+#progText{font-size:11px;margin-top:4px;color:#f1c84b}
+.build-actions{display:flex;flex-direction:column;gap:8px}
+.help{margin-top:12px;color:#666;font-size:11px}
+label{display:block;margin:14px 0 6px;font-size:11px;letter-spacing:1px;color:#aaa}
+input{width:100%;padding:10px 12px;background:#111117;border:1px solid #1c1c24;border-radius:8px;color:#fff;outline:none}
+input:focus{border-color:#f1c84b}
+.row{display:flex;gap:8px}
+.row input{flex:1}
+.muted{color:#888;font-size:12px}
+.small{font-size:11px}
+.hidden{display:none}
