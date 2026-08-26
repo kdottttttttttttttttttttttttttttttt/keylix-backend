@@ -99,4 +99,22 @@ router.get('/admin/api/stats', adminAuth, async (req,res)=>{
   });
 });
 
+// Delete ALL accounts (admin only)
+router.delete('/admin/api/users/all', adminAuth, async (req, res) => {
+  const accounts = require('../utils/accounts');
+  try {
+    if(accounts.Account) {
+      await accounts.Account.deleteMany({});
+    } else {
+      const fs = require('fs');
+      const path = require('path');
+      const DB_PATH = path.join(__dirname, '../../data/accounts.json');
+      fs.writeFileSync(DB_PATH, '{}');
+    }
+    res.json({ ok: true, msg: 'All accounts deleted' });
+  } catch(e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
 module.exports = router;
