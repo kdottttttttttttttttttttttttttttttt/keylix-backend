@@ -13,7 +13,19 @@ function createDefaultProfile(accountId) {
       attributes: {
         past_seasons: [],
         season_match_boost: 0,
-        loadouts: {},
+        loadouts: {
+          "0": {
+            character: "AthenaCharacter:CID_690_Athena_Commando_M_UltraThief",
+            pickaxe: "AthenaPickaxe:Pickaxe_ID_108_SpyTech",
+            glider: "AthenaGlider:Glider_ID_090_SpyUmbrella",
+            backpack: "AthenaBackpack:BID_105_SpyCase",
+            contrail: "AthenaSkyDiveContrail:Trails_ID_001_Default",
+            loadingScreen: "AthenaLoadingScreen:LSID_001_Default",
+            musicPack: "AthenaMusicPack:MusicPack_001_Default",
+            dances: ["AthenaDance:EID_TechStep","AthenaDance:EID_Floss","AthenaDance:EID_OrangeJustice","","","",""],
+            skyDiveContrail: "AthenaSkyDiveContrail:Trails_ID_001_Default"
+          }
+        },
         mtx_purchased: 99999,
         book_level: 100,
         book_xp: 99999,
@@ -27,12 +39,12 @@ function createDefaultProfile(accountId) {
         xp: 999999,
         season: { numWins: 50, numHighBracket: 10, numLowBracket: 20 },
         favorite_character: "AthenaCharacter:CID_690_Athena_Commando_M_UltraThief",
-        favorite_backpack: "",
+        favorite_backpack: "AthenaBackpack:BID_105_SpyCase",
         favorite_pickaxe: "AthenaPickaxe:Pickaxe_ID_108_SpyTech",
         favorite_glider: "AthenaGlider:Glider_ID_090_SpyUmbrella",
-        favorite_skydivecontrail: "",
-        favorite_musicpack: "",
-        favorite_loadingscreen: ""
+        favorite_skydivecontrail: "AthenaSkyDiveContrail:Trails_ID_001_Default",
+        favorite_musicpack: "AthenaMusicPack:MusicPack_001_Default",
+        favorite_loadingscreen: "AthenaLoadingScreen:LSID_001_Default"
       }
     },
     items: {
