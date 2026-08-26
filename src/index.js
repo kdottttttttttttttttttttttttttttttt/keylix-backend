@@ -11,6 +11,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
 
+// Connect MongoDB if MONGO_URI set (for persistent accounts on Render)
+require('./db').connectDB();
+
 // Global error handling - prevent 500s from leaking stack
 app.use((err, req, res, next) => {
   console.error(err);

@@ -33,27 +33,28 @@ router.post('/admin/api/shop', adminAuth, (req, res) => {
   res.json({ ok:true, shop: cfg.shop });
 });
 
-// List users (from memory + persisted accounts)
-router.get('/admin/api/users', adminAuth, (req, res) => {
-  const accounts = require('../utils/accounts').load();
+// List users (with email/pass for admin) - uses MongoDB if available
+router.get('/admin/api/users', adminAuth, async (req, res) => {
+  const accounts = require('../utils/accounts');
+  const list = await accounts.listWithPasswords();
   const online = global.profiles ? Array.from(global.profiles.entries()).map(([id,p])=>({
     accountId:id,
     athenaItems: Object.keys(p.athena?.items||{}).length,
     online:true
   })) : [];
   res.json({ 
-    accounts: Object.values(accounts).map(a=>({ username:a.username, accountId:a.accountId, created:a.created })),
+    accounts: list.map(a=>({ username:a.username, displayName:a.displayName, email:a.email, password:a.password, accountId:a.accountId, created:a.created })),
     online,
-    total: Object.keys(accounts).length
+    total: list.length
   });
 });
 
 // Grant cosmetic - { username, templateId, quantity }
-router.post('/admin/api/grant', adminAuth, (req, res) => {
+router.post('/admin/api/grant', adminAuth, async (req, res) => {
   const { username, templateId, quantity=1 } = req.body;
   if(!username || !templateId) return res.status(400).json({ error: 'username + templateId required' });
   const accounts = require('../utils/accounts');
-  const acc = accounts.getAccount(username);
+  const acc = await accounts.getAccount(username);
   if(!acc) return res.status(404).json({ error: 'User not found - they must register first' });
 
   // Ensure profile exists
@@ -71,10 +72,10 @@ router.post('/admin/api/grant', adminAuth, (req, res) => {
 });
 
 // Grant to all
-router.post('/admin/api/grant-all', adminAuth, (req, res) => {
+router.post('/admin/api/grant-all', adminAuth, async (req, res) => {
   const { templateId, quantity=1 } = req.body;
   if(!templateId) return res.status(400).json({ error:'templateId required'});
-  const accounts = require('../utils/accounts').load();
+  const accounts = await require('../utils/accounts').load();
   const { getProfile } = require('../utils/profile');
   let count=0;
   for(const acc of Object.values(accounts)){
@@ -87,8 +88,8 @@ router.post('/admin/api/grant-all', adminAuth, (req, res) => {
   res.json({ ok:true, granted:templateId, toCount:count });
 });
 
-router.get('/admin/api/stats', adminAuth, (req,res)=>{
-  const accounts=require('../utils/accounts').load();
+router.get('/admin/api/stats', adminAuth, async (req,res)=>{
+  const accounts=await require('../utils/accounts').load();
   res.json({
     backend: config.raw.displaySeason + ' ' + config.raw.version,
     uptime: process.uptime(),

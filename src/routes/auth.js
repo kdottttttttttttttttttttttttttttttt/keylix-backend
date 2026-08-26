@@ -6,18 +6,18 @@ const { v4: uuidv4 } = require('uuid');
 // Keylix own accounts (launcher register/login) -> POST /keylix/api/register & /keylix/api/login
 const accounts = require('../utils/accounts');
 
-router.post('/keylix/api/register', (req, res) => {
+router.post('/keylix/api/register', async (req, res) => {
   const { username, password, email } = req.body;
-  const r = accounts.createAccount(username, password, email);
+  const r = await accounts.createAccount(username, password, email);
   if (!r.ok) return res.status(400).json({ error: r.msg });
   const data = createToken(r.username, r.accountId);
   global.tokens.set(r.accountId, data.token);
   res.json({ ok:true, accountId: r.accountId, username: r.username, token: data.token });
 });
 
-router.post('/keylix/api/login', (req, res) => {
+router.post('/keylix/api/login', async (req, res) => {
   const { username, password } = req.body;
-  const acc = accounts.verifyAccount(username, password);
+  const acc = await accounts.verifyAccount(username, password);
   if (!acc) return res.status(401).json({ error: 'Invalid credentials' });
   const data = createToken(acc.displayName, acc.accountId);
   global.tokens.set(acc.accountId, data.token);
@@ -30,7 +30,7 @@ router.get('/keylix/api/accounts/count', (req, res) => {
 });
 
 // POST /account/api/oauth/token (Fortnite game auth - now tries Keylix accounts first, else guest) - handles email as username@keylix.local
-router.post('/account/api/oauth/token', (req, res) => {
+router.post('/account/api/oauth/token', async (req, res) => {
   // Fortnite sends email field, but Keylix accounts are username-only - strip domain
   let rawUser = req.body.username || req.body.email || '';
   let username = rawUser.includes('@') ? rawUser.split('@')[0] : rawUser;
@@ -40,11 +40,11 @@ router.post('/account/api/oauth/token', (req, res) => {
   let accountId = uuidv4().replace(/-/g, "");
 
   if (username && password) {
-    const acc = accounts.verifyAccount(username, password);
+    const acc = await accounts.verifyAccount(username, password);
     if (acc) {
       displayName = acc.displayName;
       accountId = acc.accountId;
-    } else if (accounts.getAccount(username)) {
+    } else if (await accounts.getAccount(username)) {
       return res.status(401).json({ errorCode: "errors.com.epicgames.account.invalid_account_credentials", errorMessage: "Invalid credentials" });
     }
     // if no account exists, auto-create guest (for quick play)

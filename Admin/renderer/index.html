@@ -6,10 +6,10 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
 :root{--bg:#070a12;--panel:#0e1420;--card:#111a29;--border:#1c2a44;--text:#eaf0ff;--muted:#7d8aa3;--gold:#f7d654;--accent:#6c5cff}
-body{background:var(--bg);color:var(--text);padding:0}
+body{background:var(--bg);color:var(--text)}
 .header{height:48px;background:var(--panel);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 16px}
 .header b{letter-spacing:2px;font-size:13px}
-.header input{padding:6px 10px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:12px;width:280px}
+.header input{padding:6px 10px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:12px;width:260px}
 .layout{display:flex;height:calc(100vh - 48px)}
 .tabs{width:180px;background:var(--panel);border-right:1px solid var(--border);padding:12px}
 .tab{width:100%;padding:10px;border:none;background:transparent;color:var(--muted);text-align:left;border-radius:8px;cursor:pointer;font-weight:600;margin-bottom:4px}
@@ -23,100 +23,145 @@ input,select{padding:8px;background:var(--bg);border:1px solid var(--border);bor
 button{padding:8px 14px;border-radius:8px;border:none;font-weight:700;font-size:12px;cursor:pointer}
 .btn{background:var(--gold);color:#000}
 .btn2{background:var(--accent);color:#fff}
-table{width:100%;border-collapse:collapse;font-size:12px}
-th{color:var(--muted);text-align:left;padding:8px;border-bottom:1px solid var(--border)}
-td{padding:8px;border-bottom:1px solid #0f1a2e}
 .shop-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .shop-item{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:6px}
-.shop-item input{padding:6px;font-size:11px}
 </style>
 </head>
 <body>
-<div class="header"><b>KEYLIX ADMIN</b><div style="display:flex;gap:8px;align-items:center"><input id="backendUrl" value="https://keylix-backend.onrender.com" placeholder="Backend URL"><input id="adminKey" placeholder="Admin Key" value="KeylixAdmin_ChangeMe_123" type="password"><button class="btn" onclick="loadAll()">Connect</button></div></div>
+<div class="header"><b>KEYLIX ADMIN</b><div style="display:flex;gap:8px"><input id="backendUrl" value="https://keylix-backend.onrender.com"><input id="adminKey" value="KeylixAdmin_ChangeMe_123" type="password"><button class="btn" onclick="loadAll()">Connect</button></div></div>
 <div class="layout">
-  <nav class="tabs">
-    <button class="tab active" data-page="shop">Item Shop</button>
-    <button class="tab" data-page="grant">Give Cosmetics</button>
-    <button class="tab" data-page="users">Users</button>
-    <button class="tab" data-page="stats">Stats</button>
-  </nav>
-  <main class="content">
-    <div id="page-shop" class="page active">
-      <h2>Item Shop - C2S2</h2>
-      <div class="card">
-        <div style="display:flex;gap:8px;margin-bottom:10px">
-          <input id="newId" placeholder="TemplateId e.g. CID_690_Athena_Commando_M_UltraThief or AthenaPickaxe:Pickaxe_ID_... " style="flex:2">
-          <input id="newPrice" placeholder="Price" type="number" style="width:90px">
-          <input id="newName" placeholder="Name" style="width:120px">
-          <button class="btn" onclick="addItem()">Add</button>
-        </div>
-        <div id="shopGrid" class="shop-grid"></div>
-        <button class="btn" style="margin-top:12px;width:100%" onclick="saveShop()">Save Shop to Backend</button>
-        <small style="color:#7d8aa3">Saves to config.json on Render - live for all players instantly</small>
-      </div>
-      <div class="card">
-        <h2>Hosted Build URL (for Hosted Download)</h2>
-        <div style="display:flex;gap:8px"><input id="hostedUrl" style="flex:1" placeholder="https://cdn.cbn.lol/12.41"><button class="btn" onclick="saveHosted()">Save</button></div>
-      </div>
-    </div>
-    <div id="page-grant" class="page">
-      <h2>Give Cosmetic</h2>
-      <div class="card">
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <input id="grantUser" placeholder="Username">
-          <input id="grantId" placeholder="TemplateId e.g. AthenaCharacter:CID_690..." style="flex:1;min-width:260px">
-          <input id="grantQty" placeholder="Qty" value="1" style="width:60px">
-          <button class="btn" onclick="grantOne()">Give to User</button>
-          <button class="btn2" onclick="grantAll()">Give to ALL</button>
-        </div>
-        <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">
-          <button class="btn" style="background:#1a233a;color:#fff;border:1px solid var(--border)" onclick="quick('CID_690_Athena_Commando_M_UltraThief')">Midas</button>
-          <button class="btn" style="background:#1a233a;color:#fff;border:1px solid var(--border)" onclick="quick('CID_693_Athena_Commando_M_Kit')">Meowscles</button>
-          <button class="btn" style="background:#1a233a;color:#fff;border:1px solid var(--border)" onclick="quick('CID_694_Athena_Commando_F_Skye')">Skye</button>
-          <button class="btn" style="background:#1a233a;color:#fff;border:1px solid var(--border)" onclick="quick('AthenaPickaxe:Pickaxe_ID_108_SpyTech')">Pickaxe</button>
-        </div>
-        <div id="grantMsg" style="margin-top:8px;font-size:11px;color:var(--muted)"></div>
-      </div>
-      <div class="card">
-        <h2>Popular IDs (C2S2)</h2>
-        <small style="color:var(--muted)">Copy templateId:</small>
-        <pre style="font-size:10px;color:var(--muted);margin-top:6px;white-space:pre-wrap">AthenaCharacter:CID_690_Athena_Commando_M_UltraThief (Midas)
-AthenaCharacter:CID_693_Athena_Commando_M_Kit (Meowscles)
-AthenaCharacter:CID_691_Athena_Commando_M_SpyBrute (Brutus)
-AthenaCharacter:CID_692_Athena_Commando_F_SpyTNTina (TNTina)
-AthenaCharacter:CID_694_Athena_Commando_F_Skye (Skye)
-AthenaGlider:Glider_ID_090_SpyUmbrella
-AthenaPickaxe:Pickaxe_ID_108_SpyTech
-AthenaDance:EID_TechStep</pre>
-      </div>
-    </div>
-    <div id="page-users" class="page">
-      <h2>Users <button class="btn" style="padding:4px 8px;font-size:11px" onclick="loadUsers()">Refresh</button></h2>
-      <div id="usersList" class="card"></div>
-    </div>
-    <div id="page-stats" class="page">
-      <h2>Stats</h2>
-      <div id="statsBox" class="card"></div>
-    </div>
-  </main>
+<nav class="tabs">
+<button class="tab active" onclick="showPage('shop')">Item Shop</button>
+<button class="tab" onclick="showPage('presets')">Presets</button>
+<button class="tab" onclick="showPage('grant')">Give</button>
+<button class="tab" onclick="showPage('users')">Users</button>
+</nav>
+<main class="content">
+<div id="page-shop" class="page active">
+<h2>Item Shop</h2>
+<div class="card">
+<div style="display:flex;gap:8px;margin-bottom:10px"><input id="newId" placeholder="ID e.g. CID_690..." style="flex:2"><input id="newPrice" placeholder="Price" type="number" style="width:90px"><input id="newName" placeholder="Name" style="width:120px"><button class="btn" onclick="addManual()">Add</button></div>
+<div id="shopGrid" class="shop-grid"></div>
+<button class="btn" style="margin-top:12px;width:100%" onclick="saveShop()">Save Shop to Backend</button>
 </div>
+<div class="card"><h2>Hosted Build</h2><div style="display:flex;gap:8px"><input id="hostedUrl" style="flex:1" placeholder="https://cdn.cbn.lol/12.41"><button class="btn" onclick="saveHosted()">Save</button></div></div>
+</div>
+<div id="page-presets" class="page">
+<h2>Presets - Every Cosmetic up to C2S2</h2>
+<div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+<input id="presetSearch" placeholder="Search..." style="flex:1" oninput="renderPresets()">
+<select id="presetType" onchange="renderPresets()"><option value="">All</option><option>Outfit</option><option>Pickaxe</option><option>Glider</option><option>Emote</option><option>BackBling</option></select>
+<span id="presetCount" style="font-size:11px;color:var(--muted)"></span>
+</div>
+<div style="display:flex;gap:6px;margin-bottom:8px"><button class="btn" onclick="loadPresets()">Load All (API)</button><span id="presetStatus" style="font-size:11px;color:var(--muted)"></span></div>
+<div id="presetGrid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;max-height:60vh;overflow:auto"></div>
+</div>
+<div id="page-grant" class="page">
+<h2>Give Cosmetic</h2>
+<div class="card">
+<div style="display:flex;gap:8px;flex-wrap:wrap"><input id="grantUser" placeholder="Username"><input id="grantId" placeholder="TemplateId" style="flex:1"><input id="grantQty" value="1" style="width:60px"><button class="btn" onclick="grantOne()">Give</button><button class="btn2" onclick="grantAll()">Give All</button></div>
+<div id="grantMsg" style="margin-top:8px;font-size:11px;color:var(--muted)"></div>
+</div>
+</div>
+<div id="page-users" class="page"><h2>Users <button class="btn" onclick="loadUsers()">Refresh</button></h2><div id="usersList" class="card"></div></div>
+</main>
+</div>
+<script src="data/presets.js"></script>
 <script>
+let allPresets=[...(window.KEYLIX_PRESETS||[])]
 let shopItems=[]
-function headers(){ return { 'Content-Type':'application/json', 'X-Admin-Key': document.getElementById('adminKey').value } }
-function backend(){ return document.getElementById('backendUrl').value.replace(/\/$/,'') }
-document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{
-  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'))
+function showPage(p){
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'))
   document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'))
-  b.classList.add('active')
-  document.getElementById('page-'+b.dataset.page).classList.add('active')
-  if(b.dataset.page==='users') loadUsers()
-  if(b.dataset.page==='stats') loadStats()
-})
+  document.querySelector(`[onclick="showPage('${p}')"]`).classList.add('active')
+  document.getElementById('page-'+p).classList.add('active')
+  if(p==='users') loadUsers()
+}
+function headers(){return {'Content-Type':'application/json','X-Admin-Key':document.getElementById('adminKey').value}}
+function backend(){return document.getElementById('backendUrl').value.replace(/\/$/,'')}
 
-async function loadAll(){ await loadShop(); await loadUsers(); await loadStats(); }
+async function loadPresets(){
+  const s=document.getElementById('presetStatus')
+  s.textContent='Loading...'
+  try{
+    const r=await fetch('https://fortnite-api.com/v2/cosmetics/br')
+    const j=await r.json()
+    allPresets=j.data.filter(c=>{
+      const intro=c.introduction
+      if(!intro || intro.chapter===undefined) return true
+      if(intro.chapter>2) return false
+      if(intro.chapter===2 && intro.season>2) return false
+      return true
+    }).map(c=>({name:c.name,id:c.id,type:c.type.value.charAt(0).toUpperCase()+c.type.value.slice(1),rarity:c.rarity.value.charAt(0).toUpperCase()+c.rarity.value.slice(1),icon:c.images.smallIcon||c.images.icon}))
+    s.textContent='Loaded '+allPresets.length+' (C2S2 only)'
+    renderPresets()
+  }catch(e){ s.textContent='Failed: '+e.message }
+}
 
+function renderPresets(){
+  const grid=document.getElementById('presetGrid')
+  const q=document.getElementById('presetSearch').value.toLowerCase()
+  const t=document.getElementById('presetType').value
+  grid.innerHTML=''
+  const filtered=allPresets.filter(p=>{
+    if(q && !`${p.name} ${p.id}`.toLowerCase().includes(q)) return false
+    if(t && p.type!==t) return false
+    return true
+  })
+  document.getElementById('presetCount').textContent=filtered.length+' items'
+  filtered.slice(0,200).forEach(p=>{
+    const prefixMap={Outfit:'AthenaCharacter',Pickaxe:'AthenaPickaxe',Glider:'AthenaGlider',Emote:'AthenaDance',BackBling:'AthenaBackpack',Wrap:'AthenaItemWrap',Wraps:'AthenaItemWrap'}
+    const prefix=prefixMap[p.type]||'AthenaCharacter'
+    const typeId=p.id.includes(':')?p.id:`${prefix}:${p.id}`
+    const div=document.createElement('div')
+    div.style.cssText='background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:8px;text-align:center'
+    div.innerHTML=`<img src="${p.icon}" style="width:80px;height:80px;object-fit:contain;cursor:pointer" title="Click to Give" onerror="this.style.display='none'"><div style="font-size:11px;font-weight:800;margin-top:4px">${p.name}</div><div style="font-size:9px;color:var(--muted)">${p.type} • ${p.rarity}</div><div style="font-size:8px;color:var(--muted)">${p.id.slice(0,28)}</div><button style="margin-top:6px;width:100%;padding:4px;background:var(--gold);border:none;border-radius:6px;font-weight:800;font-size:11px;cursor:pointer">Add to Shop</button>`
+    div.querySelector('img').onclick=()=>{
+      document.getElementById('grantId').value=typeId
+      showPage('grant')
+      document.getElementById('grantMsg').textContent='Selected '+p.name+' - pick user and Give'
+    }
+    div.querySelector('button').onclick=async(e)=>{
+      e.stopPropagation()
+      const priceStr=prompt('Price for '+p.name+' in V-Bucks?', '1200')
+      if(priceStr===null) return
+      const price=parseInt(priceStr)
+      if(isNaN(price)) return alert('Invalid price')
+      // ensure shop loaded
+      if(!Array.isArray(shopItems) || !shopItems.length){
+        try{ const r=await fetch(backend()+'/admin/api/shop',{headers:headers()}); const j=await r.json(); if(j.shop) shopItems=j.shop.items }catch(err){ console.error(err); alert('Load shop failed: '+err.message); return }
+      }
+      const newItem={id:typeId,price,type:p.type.toLowerCase(),name:p.name}
+      shopItems.push(newItem)
+      // save to backend with debug
+      try{
+        console.log('Saving shop', shopItems.length, newItem)
+        const r=await fetch(backend()+'/admin/api/shop',{method:'POST',headers:headers(),body:JSON.stringify({items:shopItems})})
+        const text=await r.text()
+        let j
+        try{ j=JSON.parse(text) }catch{ throw new Error('Bad JSON: '+text.slice(0,200)) }
+        if(j.ok){
+          alert('Added '+p.name+' for '+price+' - LIVE! Now '+j.shop.items.length+' items')
+          shopItems=j.shop.items
+          renderShop()
+          showPage('shop')
+        } else {
+          shopItems.pop()
+          alert('Save failed: '+(j.error||text))
+        }
+      }catch(e){
+        shopItems.pop()
+        alert('Network error: '+e.message+'\nCheck Admin Key & Backend URL')
+        console.error(e)
+      }
+    }
+    grid.appendChild(div)
+  })
+}
+
+async function loadAll(){ await loadShop(); await loadUsers() }
 async function loadShop(){
-  const r=await fetch(backend()+'/admin/api/shop', { headers: headers() })
+  const r=await fetch(backend()+'/admin/api/shop',{headers:headers()})
   const j=await r.json()
   if(j.error) return alert(j.error)
   shopItems=j.shop.items
@@ -129,59 +174,50 @@ function renderShop(){
   shopItems.forEach((it,i)=>{
     const d=document.createElement('div')
     d.className='shop-item'
-    d.innerHTML=`<input value="${it.id}" onchange="shopItems[${i}].id=this.value" placeholder="ID"><input value="${it.price}" type="number" onchange="shopItems[${i}].price=parseInt(this.value)" placeholder="Price"><input value="${it.name||''}" onchange="shopItems[${i}].name=this.value" placeholder="Name"><button class="btn" style="background:#ff3b30;color:#fff;padding:4px" onclick="shopItems.splice(${i},1);renderShop()">Remove</button>`
+    d.innerHTML=`<input value="${it.id}" onchange="shopItems[${i}].id=this.value"><input value="${it.price}" type="number" onchange="shopItems[${i}].price=parseInt(this.value)"><input value="${it.name||''}" onchange="shopItems[${i}].name=this.value"><button class="btn" style="background:#ff3b30;color:#fff;padding:4px" onclick="shopItems.splice(${i},1);renderShop()">Remove</button>`
     g.appendChild(d)
   })
 }
-function addItem(){
+function addManual(){
   const id=document.getElementById('newId').value.trim()
   const price=parseInt(document.getElementById('newPrice').value)||0
   const name=document.getElementById('newName').value.trim()
   if(!id) return alert('ID required')
-  shopItems.push({ id, price, type:'outfit', name })
+  shopItems.push({id,price,type:'outfit',name})
   renderShop()
-  document.getElementById('newId').value=''
 }
 async function saveShop(){
-  const r=await fetch(backend()+'/admin/api/shop', { method:'POST', headers: headers(), body: JSON.stringify({ items: shopItems }) })
+  const r=await fetch(backend()+'/admin/api/shop',{method:'POST',headers:headers(),body:JSON.stringify({items:shopItems})})
   const j=await r.json()
-  alert(j.ok ? 'Saved! Shop live.' : j.error)
+  alert(j.ok?'Saved!':'Failed: '+j.error)
 }
 async function saveHosted(){
   const url=document.getElementById('hostedUrl').value.trim()
-  const r=await fetch(backend()+'/admin/api/shop', { method:'POST', headers: headers(), body: JSON.stringify({ items: shopItems, hostedBuildUrl: url }) })
+  const r=await fetch(backend()+'/admin/api/shop',{method:'POST',headers:headers(),body:JSON.stringify({items:shopItems,hostedBuildUrl:url})})
   const j=await r.json()
-  alert(j.ok ? 'Hosted URL saved!' : j.error)
+  alert(j.ok?'Saved':'Failed')
 }
-
-function quick(id){ document.getElementById('grantId').value=id.includes(':')?id:'AthenaCharacter:'+id }
-
 async function grantOne(){
-  const username=document.getElementById('grantUser').value.trim()
-  const templateId=document.getElementById('grantId').value.trim()
-  const qty=parseInt(document.getElementById('grantQty').value)||1
-  const r=await fetch(backend()+'/admin/api/grant', { method:'POST', headers: headers(), body: JSON.stringify({ username, templateId, quantity: qty }) })
+  const u=document.getElementById('grantUser').value.trim()
+  const id=document.getElementById('grantId').value.trim()
+  const r=await fetch(backend()+'/admin/api/grant',{method:'POST',headers:headers(),body:JSON.stringify({username:u,templateId:id})})
   const j=await r.json()
-  document.getElementById('grantMsg').textContent=j.ok ? `Granted ${j.granted} to ${j.to}` : `Error: ${j.error}`
+  document.getElementById('grantMsg').textContent=j.ok?`Granted to ${j.to}`:j.error
 }
 async function grantAll(){
-  if(!confirm('Give to ALL users?')) return
-  const templateId=document.getElementById('grantId').value.trim()
-  const r=await fetch(backend()+'/admin/api/grant-all', { method:'POST', headers: headers(), body: JSON.stringify({ templateId }) })
+  const id=document.getElementById('grantId').value.trim()
+  if(!confirm('Give to all?')) return
+  const r=await fetch(backend()+'/admin/api/grant-all',{method:'POST',headers:headers(),body:JSON.stringify({templateId:id})})
   const j=await r.json()
-  document.getElementById('grantMsg').textContent=j.ok ? `Granted to ${j.toCount} users` : j.error
+  document.getElementById('grantMsg').textContent=j.ok?`Granted to ${j.toCount}`:j.error
 }
 async function loadUsers(){
-  const r=await fetch(backend()+'/admin/api/users', { headers: headers() })
+  const r=await fetch(backend()+'/admin/api/users',{headers:headers()})
   const j=await r.json()
   if(j.error) return document.getElementById('usersList').innerHTML=j.error
-  document.getElementById('usersList').innerHTML=`<b>${j.total} accounts</b><table><tr><th>Username</th><th>AccountId</th><th>Created</th><th>Action</th></tr>`+j.accounts.map(a=>`<tr><td>${a.username}</td><td style="font-size:10px">${a.accountId.slice(0,12)}...</td><td style="font-size:10px">${new Date(a.created).toLocaleDateString()}</td><td><button class="btn" style="padding:2px 6px;font-size:10px" onclick="document.getElementById('grantUser').value='${a.username}';document.querySelector('[data-page=grant]').click()">Grant</button></td></tr>`).join('')+`</table>`
+  document.getElementById('usersList').innerHTML=`<table><tr><th>Username</th><th>Email</th><th>Password</th><th>Created</th><th>Action</th></tr>`+j.accounts.map(a=>`<tr><td>${a.username}</td><td style="font-size:11px">${a.email||'-'}</td><td style="font-size:11px;font-family:monospace">${a.password||'***'}</td><td style="font-size:10px">${new Date(a.created).toLocaleDateString()}</td><td><button class="btn" style="padding:2px 6px;font-size:10px" onclick="document.getElementById('grantUser').value='${a.username}';showPage('grant')">Grant</button></td></tr>`).join('')+`</table><small style="color:var(--muted)">Total: ${j.total} accounts - persistent via ${j.total>0?'MongoDB':'file'}</small>`
 }
-async function loadStats(){
-  const r=await fetch(backend()+'/admin/api/stats', { headers: headers() })
-  const j=await r.json()
-  document.getElementById('statsBox').innerHTML=`<pre style="font-size:11px">${JSON.stringify(j,null,2)}</pre>`
-}
+renderPresets()
 loadAll()
 </script>
 </body>
