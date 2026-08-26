@@ -90,7 +90,8 @@ router.get('/fortnite/api/storefront/v2/catalog', (req, res) => {
 });
 
 router.get('/catalog/api/shared/bulk/offers', (req, res) => res.json({}));
-router.get('/fortnite/api/storefront/v2/keychain', (req, res) => res.json([]));
+// Keychain must be array of hex strings - empty array is valid but game on 12.41 expects at least 1 dummy key or it throws UnableToParseJson
+router.get('/fortnite/api/storefront/v2/keychain', (req, res) => res.json(["c3ac1182f4844d135a33d354d6e0105d8bff71af86e7d6e18059bf0cecf7fc64722"]));
 
 // MCP - Profile queries
 router.post('/fortnite/api/game/v2/profile/:accountId/client/:command', (req, res) => {

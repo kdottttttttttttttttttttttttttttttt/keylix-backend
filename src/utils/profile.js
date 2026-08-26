@@ -8,6 +8,7 @@ function createDefaultProfile(accountId) {
     updated: new Date().toISOString(),
     rvn: 782,
     wipeNumber: 1,
+    version: "12.41",
     stats: {
       attributes: {
         past_seasons: [],
