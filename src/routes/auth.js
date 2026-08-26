@@ -29,10 +29,11 @@ router.get('/keylix/api/accounts/count', (req, res) => {
   res.json({ count: Object.keys(db).length });
 });
 
-// POST /account/api/oauth/token (Fortnite game auth - now tries Keylix accounts first, else guest)
+// POST /account/api/oauth/token (Fortnite game auth - now tries Keylix accounts first, else guest) - handles email as username@keylix.local
 router.post('/account/api/oauth/token', (req, res) => {
-  // Try Keylix account login via password grant
-  const username = req.body.username || req.body.email;
+  // Fortnite sends email field, but Keylix accounts are username-only - strip domain
+  let rawUser = req.body.username || req.body.email || '';
+  let username = rawUser.includes('@') ? rawUser.split('@')[0] : rawUser;
   const password = req.body.password;
   
   let displayName = username || `KeylixUser${Math.floor(Math.random()*9999)}`;
