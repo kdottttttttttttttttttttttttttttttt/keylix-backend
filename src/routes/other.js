@@ -16,6 +16,7 @@ router.get('/launcher/api/public/distributionPoints*', (req, res) => res.json({ 
 
 // Keylix Launcher API - Retrac-style
 router.get('/keylix/api/launcher/manifest', (req, res) => {
+  const cfg = require('../../config.json');
   res.json({
     project: "Keylix",
     season: "Chapter 2 Season 2",
@@ -26,9 +27,7 @@ router.get('/keylix/api/launcher/manifest', (req, res) => {
         name: "Chapter 2 Season 2 (12.41) - Top Secret",
         description: "Full C2S2 build - Midas, Spy Games. Requires ~20GB",
         size: "20GB",
-        // HOST YOUR FILES HERE - set to your CDN / file host
-        // Example: upload 12.41 zip to Google Drive / Mega / S3 and put link here
-        downloadUrl: "https://example.com/keylix/12.41.zip",
+        downloadUrl: cfg.hostedBuildUrl || "https://example.com/keylix/12.41.zip",
         manifestUrl: "https://example.com/keylix/12.41.manifest.json",
         version: "12.41",
         injectedDll: "Starfall.dll"

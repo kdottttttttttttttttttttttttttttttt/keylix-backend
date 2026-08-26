@@ -7,6 +7,7 @@
   "port": 3551,
   "matchmakerPort": 3552,
   "backendUrl": "https://keylix-backend.onrender.com",
+  "hostedBuildUrl": "https://example.com/keylix/12.41.zip",
   "shop": {
     "refreshIntervalHours": 24,
     "items": [

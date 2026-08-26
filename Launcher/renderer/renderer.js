@@ -176,11 +176,19 @@ els.playBtn.onclick = async () => {
 };
 
 els.dlBtn.onclick = async () => {
-  const url = els.downloadUrl.value.trim();
+  // try to get hosted URL from backend manifest (locked, no user input)
+  let url = els.downloadUrl.value.trim();
+  try{
+    const r=await fetch(els.backendUrl.value + '/keylix/api/launcher/manifest');
+    const j=await r.json();
+    if(j.builds && j.builds[0] && j.builds[0].downloadUrl && !j.builds[0].downloadUrl.includes('example.com')){
+      url=j.builds[0].downloadUrl;
+    }
+  }catch{}
   const dest = els.fortnitePath.value || await window.keylix.selectPath();
   if(!dest) return;
-  if(url.includes('example.com')) {
-    alert('Set your real download URL in Settings first!\n\nUpload 12.41.zip to Drive/Mega/S3 and paste direct link.\nFor now use Epic Pull above.');
+  if(!url || url.includes('example.com')) {
+    alert('Hosted build not set yet!\n\nAdmin: set hostedBuildUrl in config.json on backend (https://your-cdn.com/12.41.zip) and redeploy to Render.\nPlayers will then download without Epic.');
     return;
   }
   els.progWrap.classList.remove('hidden');
