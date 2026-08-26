@@ -40,16 +40,17 @@ app.get('/', (req, res) => {
   });
 });
 
-// 404 fallback - Fortnite expects specific error codes
+// 404 fallback - NEVER return 404 for login-critical paths or game will abort login (CheckPlatformPlayAllowed)
 app.use((req, res) => {
-  console.log(`[404] ${req.method} ${req.url}`);
-  res.status(404).json({
-    errorCode: "errors.com.epicgames.common.not_found",
-    errorMessage: `Sorry the resource you were trying to find could not be found`,
-    numericErrorCode: 1004,
-    originatingService: "any",
-    intent: "prod"
-  });
+  console.log(`[404] ${req.method} ${req.url} -> returning 200 (login safe)`);
+  // For any unhandled route, return success to prevent login fail
+  if (req.url.includes('canPlay') || req.url.includes('CanPlay')) return res.json({ canPlay: true });
+  if (req.url.includes('externalAuths')) return res.json([]);
+  if (req.url.includes('avatar')) return res.json({});
+  if (req.url.includes('platform')) return res.json({ canPlay: true });
+  if (req.url.includes('allowed')) return res.json({ canPlay: true });
+  // Generic success - don't kill login
+  res.json({});
 });
 
 const http = require('http');
