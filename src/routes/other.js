@@ -11,10 +11,10 @@ router.get('/fortnite/api/statsv2/account/:accountId', (req, res) => res.json({ 
 router.get('/statsproxy/api/statsv2/account/:accountId', (req, res) => res.json({ startTime: 0, endTime: 0, stats: {} }));
 router.get('/fortnite/api/stats/accountId/:accountId/bulk/window/*', (req, res) => res.json({}));
 router.post('/fortnite/api/feedback/*', (req, res) => res.status(204).end());
-// Fix CheckPlatformPlayAllowed - actual Fortnite 12.41 endpoint is POST /fortnite/api/game/v2/tryPlayOnPlatform/account/:id?platform=Windows -> returns boolean true
-router.post('/fortnite/api/game/v2/tryPlayOnPlatform/account/:accountId', (req,res)=>res.json(true));
-router.get('/fortnite/api/game/v2/tryPlayOnPlatform/account/:accountId', (req,res)=>res.json(true));
-router.all('/fortnite/api/game/v2/tryPlayOnPlatform/*', (req,res)=>res.json(true));
+// Fix CheckPlatformPlayAllowed - 12.41 expects object with users/avatarInfos arrays, not just boolean
+router.post('/fortnite/api/game/v2/tryPlayOnPlatform/account/:accountId', (req,res)=>res.json({ canPlay: true, canPlayOnPlatform: true, users: [], avatarInfos: [] }));
+router.get('/fortnite/api/game/v2/tryPlayOnPlatform/account/:accountId', (req,res)=>res.json({ canPlay: true, users: [], avatarInfos: [] }));
+router.all('/fortnite/api/game/v2/tryPlayOnPlatform/*', (req,res)=>res.json({ canPlay: true, users: [], avatarInfos: [] }));
 // Keep old canPlay for other versions
 router.get('/account/api/public/account/:accountId/canPlay', (req,res)=>res.json({ canPlay: true, canPlayOnPlatform: true }));
 router.all('/account/api/public/account/:accountId/canPlay/*', (req,res)=>res.json({ canPlay: true, canPlayOnPlatform: true }));
