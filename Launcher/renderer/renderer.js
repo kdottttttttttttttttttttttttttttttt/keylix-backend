@@ -79,17 +79,25 @@ async function loadCfg(){
   els.downloadUrl.value = cfg.downloadUrl || localStorage.getItem('downloadUrl') || 'https://example.com/keylix/12.41.zip';
   const m = await window.keylix.epicGetManifest();
   if(document.getElementById('manifestId')) document.getElementById('manifestId').value = m;
-  // login wall
+  // login wall - no flash
   const wall=document.getElementById('loginWall');
   const userLabel=document.getElementById('userLabel');
   const settingsUser=document.getElementById('settingsUser');
-  if(cfg.isLoggedIn && cfg.username){
-    if(wall) wall.classList.add('hidden');
-    if(userLabel) userLabel.textContent=cfg.username;
-    if(settingsUser) settingsUser.textContent=cfg.username;
-    document.getElementById('welcomeName').textContent=cfg.username;
-  } else {
-    if(wall) wall.classList.remove('hidden');
+  if(wall){
+    if(cfg.isLoggedIn && cfg.username){
+      wall.classList.add('hidden');
+      wall.style.opacity='0';
+      wall.style.pointerEvents='none';
+      if(userLabel) userLabel.textContent=cfg.username;
+      if(settingsUser) settingsUser.textContent=cfg.username;
+      const wn=document.getElementById('welcomeName'); if(wn) wn.textContent=cfg.username;
+    } else {
+      wall.classList.remove('hidden');
+      wall.style.opacity='1';
+      wall.style.pointerEvents='auto';
+      // fade in
+      requestAnimationFrame(()=>{wall.style.transition='opacity 0.3s'; wall.style.opacity='1';});
+    }
   }
   checkBackend();
 }
@@ -176,21 +184,25 @@ els.playBtn.onclick = async () => {
 };
 
 els.dlBtn.onclick = async () => {
-  // try to get hosted URL from backend manifest (locked, no user input)
+  // try to get hosted URL from backend manifest (locked, no user input) with mirrors
   let url = els.downloadUrl.value.trim();
+  let mirrors=[];
   try{
     const r=await fetch(els.backendUrl.value + '/keylix/api/launcher/manifest');
     const j=await r.json();
     if(j.builds && j.builds[0] && j.builds[0].downloadUrl && !j.builds[0].downloadUrl.includes('example.com')){
       url=j.builds[0].downloadUrl;
+      mirrors=j.downloadMirrors || j.builds[0].downloadMirrors || [];
     }
   }catch{}
   const dest = els.fortnitePath.value || await window.keylix.selectPath();
   if(!dest) return;
-  if(!url || url.includes('example.com')) {
-    alert('Hosted build not set yet!\n\nAdmin: set hostedBuildUrl in config.json on backend (https://your-cdn.com/12.41.zip) and redeploy to Render.\nPlayers will then download without Epic.');
+  const tryUrls = [url, ...mirrors].filter(Boolean).filter(u=>!u.includes('example.com'));
+  if(!tryUrls.length) {
+    alert('Hosted build not set yet!\n\nAdmin: set hostedBuildUrl in config.json on backend and redeploy.');
     return;
   }
+  url = tryUrls[0];
   els.progWrap.classList.remove('hidden');
   els.dlBtn.disabled = true;
   els.homeLog.textContent = 'Downloading hosted zip...';
@@ -199,13 +211,21 @@ els.dlBtn.onclick = async () => {
     els.progText.textContent = pct+'% ' + (done/1e6).toFixed(1) + 'MB / ' + (total/1e6).toFixed(1)+'MB';
   });
   window.keylix.onStatus(s => els.progStatus.textContent = s);
-  try {
-    const out = await window.keylix.downloadBuild({ url, dest });
+  let out=null; let lastErr=null;
+  for(const u of tryUrls){
+    try{
+      window.keylix.onStatus('Trying '+u.slice(0,40)+'...');
+      out = await window.keylix.downloadBuild({ url:u, dest });
+      break;
+    }catch(e){ lastErr=e; console.log('mirror failed', u, e); }
+  }
+  if(out){
     els.homeLog.textContent = 'Download complete: '+out;
     els.progStatus.textContent = 'Done!';
-  } catch(e) {
-    els.homeLog.textContent = 'Download failed: '+e;
-    els.progStatus.textContent = 'Failed';
+  } else {
+    els.homeLog.textContent = 'Download failed: '+lastErr;
+    els.progStatus.textContent = 'Failed - all mirrors down';
+    alert('All mirrors failed. Try Epic Pull or check https://cdn.cbn.lol/builds/season12');
   }
   els.dlBtn.disabled = false;
 };

@@ -7,7 +7,7 @@
   "port": 3551,
   "matchmakerPort": 3552,
   "backendUrl": "https://keylix-backend.onrender.com",
-  "hostedBuildUrl": "https://cdn.fortnitearchive.com/Fortnite%2012.41.zip",
+  "hostedBuildUrl": "https://cdn.cbn.lol/12.41",
   "shop": {
     "refreshIntervalHours": 24,
     "items": [

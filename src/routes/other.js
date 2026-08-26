@@ -27,7 +27,8 @@ router.get('/keylix/api/launcher/manifest', (req, res) => {
         name: "Chapter 2 Season 2 (12.41) - Top Secret",
         description: "Full C2S2 build - Midas, Spy Games. Requires ~20GB",
         size: "20GB",
-        downloadUrl: cfg.hostedBuildUrl || "https://example.com/keylix/12.41.zip",
+        downloadUrl: cfg.hostedBuildUrl || "https://cdn.cbn.lol/12.41",
+        downloadMirrors: ["https://cdn.cbn.lol/12.41","https://public.simplyblk.xyz/Fortnite%2012.41.zip","https://fnbuilds.boostedv2.dev/12.41.rar"],
         manifestUrl: "https://example.com/keylix/12.41.manifest.json",
         version: "12.41",
         injectedDll: "Starfall.dll"
