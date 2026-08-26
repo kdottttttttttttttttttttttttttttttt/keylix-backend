@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Keylix Admin</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+:root{--bg:#070a12;--panel:#0e1420;--card:#111a29;--border:#1c2a44;--text:#eaf0ff;--muted:#7d8aa3;--gold:#f7d654;--accent:#6c5cff}
+body{background:var(--bg);color:var(--text);padding:0}
+.header{height:48px;background:var(--panel);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 16px}
+.header b{letter-spacing:2px;font-size:13px}
+.header input{padding:6px 10px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:12px;width:280px}
+.layout{display:flex;height:calc(100vh - 48px)}
+.tabs{width:180px;background:var(--panel);border-right:1px solid var(--border);padding:12px}
+.tab{width:100%;padding:10px;border:none;background:transparent;color:var(--muted);text-align:left;border-radius:8px;cursor:pointer;font-weight:600;margin-bottom:4px}
+.tab.active{background:#1a233a;color:var(--text)}
+.content{flex:1;padding:18px;overflow:auto}
+.page{display:none}
+.page.active{display:block}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:12px}
+h2{font-size:14px;margin-bottom:8px}
+input,select{padding:8px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:12px}
+button{padding:8px 14px;border-radius:8px;border:none;font-weight:700;font-size:12px;cursor:pointer}
+.btn{background:var(--gold);color:#000}
+.btn2{background:var(--accent);color:#fff}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{color:var(--muted);text-align:left;padding:8px;border-bottom:1px solid var(--border)}
+td{padding:8px;border-bottom:1px solid #0f1a2e}
+.shop-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.shop-item{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:6px}
+.shop-item input{padding:6px;font-size:11px}
+</style>
+</head>
+<body>
+<div class="header"><b>KEYLIX ADMIN</b><div style="display:flex;gap:8px;align-items:center"><input id="backendUrl" value="https://keylix-backend.onrender.com" placeholder="Backend URL"><input id="adminKey" placeholder="Admin Key" value="KeylixAdmin_ChangeMe_123" type="password"><button class="btn" onclick="loadAll()">Connect</button></div></div>
+<div class="layout">
+  <nav class="tabs">
+    <button class="tab active" data-page="shop">Item Shop</button>
+    <button class="tab" data-page="grant">Give Cosmetics</button>
+    <button class="tab" data-page="users">Users</button>
+    <button class="tab" data-page="stats">Stats</button>
+  </nav>
+  <main class="content">
+    <div id="page-shop" class="page active">
+      <h2>Item Shop - C2S2</h2>
+      <div class="card">
+        <div style="display:flex;gap:8px;margin-bottom:10px">
+          <input id="newId" placeholder="TemplateId e.g. CID_690_Athena_Commando_M_UltraThief or AthenaPickaxe:Pickaxe_ID_... " style="flex:2">
+          <input id="newPrice" placeholder="Price" type="number" style="width:90px">
+          <input id="newName" placeholder="Name" style="width:120px">
+          <button class="btn" onclick="addItem()">Add</button>
+        </div>
+        <div id="shopGrid" class="shop-grid"></div>
+        <button class="btn" style="margin-top:12px;width:100%" onclick="saveShop()">Save Shop to Backend</button>
+        <small style="color:#7d8aa3">Saves to config.json on Render - live for all players instantly</small>
+      </div>
+      <div class="card">
+        <h2>Hosted Build URL (for Hosted Download)</h2>
+        <div style="display:flex;gap:8px"><input id="hostedUrl" style="flex:1" placeholder="https://cdn.cbn.lol/12.41"><button class="btn" onclick="saveHosted()">Save</button></div>
+      </div>
+    </div>
+    <div id="page-grant" class="page">
+      <h2>Give Cosmetic</h2>
+      <div class="card">
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <input id="grantUser" placeholder="Username">
+          <input id="grantId" placeholder="TemplateId e.g. AthenaCharacter:CID_690..." style="flex:1;min-width:260px">
+          <input id="grantQty" placeholder="Qty" value="1" style="width:60px">
+          <button class="btn" onclick="grantOne()">Give to User</button>
+          <button class="btn2" onclick="grantAll()">Give to ALL</button>
+        </div>
+        <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">
+          <button class="btn" style="background:#1a233a;color:#fff;border:1px solid var(--border)" onclick="quick('CID_690_Athena_Commando_M_UltraThief')">Midas</button>
+          <button class="btn" style="background:#1a233a;color:#fff;border:1px solid var(--border)" onclick="quick('CID_693_Athena_Commando_M_Kit')">Meowscles</button>
+          <button class="btn" style="background:#1a233a;color:#fff;border:1px solid var(--border)" onclick="quick('CID_694_Athena_Commando_F_Skye')">Skye</button>
+          <button class="btn" style="background:#1a233a;color:#fff;border:1px solid var(--border)" onclick="quick('AthenaPickaxe:Pickaxe_ID_108_SpyTech')">Pickaxe</button>
+        </div>
+        <div id="grantMsg" style="margin-top:8px;font-size:11px;color:var(--muted)"></div>
+      </div>
+      <div class="card">
+        <h2>Popular IDs (C2S2)</h2>
+        <small style="color:var(--muted)">Copy templateId:</small>
+        <pre style="font-size:10px;color:var(--muted);margin-top:6px;white-space:pre-wrap">AthenaCharacter:CID_690_Athena_Commando_M_UltraThief (Midas)
+AthenaCharacter:CID_693_Athena_Commando_M_Kit (Meowscles)
+AthenaCharacter:CID_691_Athena_Commando_M_SpyBrute (Brutus)
+AthenaCharacter:CID_692_Athena_Commando_F_SpyTNTina (TNTina)
+AthenaCharacter:CID_694_Athena_Commando_F_Skye (Skye)
+AthenaGlider:Glider_ID_090_SpyUmbrella
+AthenaPickaxe:Pickaxe_ID_108_SpyTech
+AthenaDance:EID_TechStep</pre>
+      </div>
+    </div>
+    <div id="page-users" class="page">
+      <h2>Users <button class="btn" style="padding:4px 8px;font-size:11px" onclick="loadUsers()">Refresh</button></h2>
+      <div id="usersList" class="card"></div>
+    </div>
+    <div id="page-stats" class="page">
+      <h2>Stats</h2>
+      <div id="statsBox" class="card"></div>
+    </div>
+  </main>
+</div>
+<script>
+let shopItems=[]
+function headers(){ return { 'Content-Type':'application/json', 'X-Admin-Key': document.getElementById('adminKey').value } }
+function backend(){ return document.getElementById('backendUrl').value.replace(/\/$/,'') }
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'))
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'))
+  b.classList.add('active')
+  document.getElementById('page-'+b.dataset.page).classList.add('active')
+  if(b.dataset.page==='users') loadUsers()
+  if(b.dataset.page==='stats') loadStats()
+})
+
+async function loadAll(){ await loadShop(); await loadUsers(); await loadStats(); }
+
+async function loadShop(){
+  const r=await fetch(backend()+'/admin/api/shop', { headers: headers() })
+  const j=await r.json()
+  if(j.error) return alert(j.error)
+  shopItems=j.shop.items
+  document.getElementById('hostedUrl').value=j.hostedBuildUrl||''
+  renderShop()
+}
+function renderShop(){
+  const g=document.getElementById('shopGrid')
+  g.innerHTML=''
+  shopItems.forEach((it,i)=>{
+    const d=document.createElement('div')
+    d.className='shop-item'
+    d.innerHTML=`<input value="${it.id}" onchange="shopItems[${i}].id=this.value" placeholder="ID"><input value="${it.price}" type="number" onchange="shopItems[${i}].price=parseInt(this.value)" placeholder="Price"><input value="${it.name||''}" onchange="shopItems[${i}].name=this.value" placeholder="Name"><button class="btn" style="background:#ff3b30;color:#fff;padding:4px" onclick="shopItems.splice(${i},1);renderShop()">Remove</button>`
+    g.appendChild(d)
+  })
+}
+function addItem(){
+  const id=document.getElementById('newId').value.trim()
+  const price=parseInt(document.getElementById('newPrice').value)||0
+  const name=document.getElementById('newName').value.trim()
+  if(!id) return alert('ID required')
+  shopItems.push({ id, price, type:'outfit', name })
+  renderShop()
+  document.getElementById('newId').value=''
+}
+async function saveShop(){
+  const r=await fetch(backend()+'/admin/api/shop', { method:'POST', headers: headers(), body: JSON.stringify({ items: shopItems }) })
+  const j=await r.json()
+  alert(j.ok ? 'Saved! Shop live.' : j.error)
+}
+async function saveHosted(){
+  const url=document.getElementById('hostedUrl').value.trim()
+  const r=await fetch(backend()+'/admin/api/shop', { method:'POST', headers: headers(), body: JSON.stringify({ items: shopItems, hostedBuildUrl: url }) })
+  const j=await r.json()
+  alert(j.ok ? 'Hosted URL saved!' : j.error)
+}
+
+function quick(id){ document.getElementById('grantId').value=id.includes(':')?id:'AthenaCharacter:'+id }
+
+async function grantOne(){
+  const username=document.getElementById('grantUser').value.trim()
+  const templateId=document.getElementById('grantId').value.trim()
+  const qty=parseInt(document.getElementById('grantQty').value)||1
+  const r=await fetch(backend()+'/admin/api/grant', { method:'POST', headers: headers(), body: JSON.stringify({ username, templateId, quantity: qty }) })
+  const j=await r.json()
+  document.getElementById('grantMsg').textContent=j.ok ? `Granted ${j.granted} to ${j.to}` : `Error: ${j.error}`
+}
+async function grantAll(){
+  if(!confirm('Give to ALL users?')) return
+  const templateId=document.getElementById('grantId').value.trim()
+  const r=await fetch(backend()+'/admin/api/grant-all', { method:'POST', headers: headers(), body: JSON.stringify({ templateId }) })
+  const j=await r.json()
+  document.getElementById('grantMsg').textContent=j.ok ? `Granted to ${j.toCount} users` : j.error
+}
+async function loadUsers(){
+  const r=await fetch(backend()+'/admin/api/users', { headers: headers() })
+  const j=await r.json()
+  if(j.error) return document.getElementById('usersList').innerHTML=j.error
+  document.getElementById('usersList').innerHTML=`<b>${j.total} accounts</b><table><tr><th>Username</th><th>AccountId</th><th>Created</th><th>Action</th></tr>`+j.accounts.map(a=>`<tr><td>${a.username}</td><td style="font-size:10px">${a.accountId.slice(0,12)}...</td><td style="font-size:10px">${new Date(a.created).toLocaleDateString()}</td><td><button class="btn" style="padding:2px 6px;font-size:10px" onclick="document.getElementById('grantUser').value='${a.username}';document.querySelector('[data-page=grant]').click()">Grant</button></td></tr>`).join('')+`</table>`
+}
+async function loadStats(){
+  const r=await fetch(backend()+'/admin/api/stats', { headers: headers() })
+  const j=await r.json()
+  document.getElementById('statsBox').innerHTML=`<pre style="font-size:11px">${JSON.stringify(j,null,2)}</pre>`
+}
+loadAll()
+</script>
+</body>
+</html>
