@@ -82,7 +82,29 @@ function getProfile(accountId) {
       }
     });
   }
-  return global.profiles.get(accountId);
+  const profile = global.profiles.get(accountId);
+  // Auto-migrate profiles with empty loadouts
+  if (!profile.athena.stats.attributes.loadouts || Object.keys(profile.athena.stats.attributes.loadouts).length === 0) {
+    profile.athena.stats.attributes.loadouts = {
+      "0": {
+        character: "AthenaCharacter:CID_690_Athena_Commando_M_UltraThief",
+        pickaxe: "AthenaPickaxe:Pickaxe_ID_108_SpyTech",
+        glider: "AthenaGlider:Glider_ID_090_SpyUmbrella",
+        backpack: "AthenaBackpack:BID_105_SpyCase",
+        contrail: "AthenaSkyDiveContrail:Trails_ID_001_Default",
+        loadingScreen: "AthenaLoadingScreen:LSID_001_Default",
+        musicPack: "AthenaMusicPack:MusicPack_001_Default",
+        dances: ["AthenaDance:EID_TechStep","AthenaDance:EID_Floss","AthenaDance:EID_OrangeJustice","","","",""],
+        skyDiveContrail: "AthenaSkyDiveContrail:Trails_ID_001_Default"
+      }
+    };
+    profile.athena.stats.attributes.favorite_character = "AthenaCharacter:CID_690_Athena_Commando_M_UltraThief";
+    profile.athena.stats.attributes.favorite_pickaxe = "AthenaPickaxe:Pickaxe_ID_108_SpyTech";
+    profile.athena.stats.attributes.favorite_glider = "AthenaGlider:Glider_ID_090_SpyUmbrella";
+    profile.athena.stats.attributes.favorite_backpack = "AthenaBackpack:BID_105_SpyCase";
+    profile.athena.stats.attributes.favorite_skydivecontrail = "AthenaSkyDiveContrail:Trails_ID_001_Default";
+  }
+  return profile;
 }
 
 module.exports = { createDefaultProfile, getProfile };
