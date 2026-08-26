@@ -44,7 +44,7 @@ app.get('/', (req, res) => {
 app.use((req, res) => {
   console.log(`[404] ${req.method} ${req.url} -> returning 200 (login safe)`);
   // For any unhandled route, return success to prevent login fail
-  if (req.url.includes('canPlay') || req.url.includes('CanPlay')) return res.json({ canPlay: true });
+  if (req.url.includes('canPlay') || req.url.includes('CanPlay')) return res.json({ canPlay: true, canPlayOnPlatform: true });
   if (req.url.includes('externalAuths')) return res.json([]);
   if (req.url.includes('avatar')) return res.json({});
   if (req.url.includes('platform')) return res.json({ canPlay: true });

@@ -111,7 +111,7 @@ router.get('/account/api/public/account', (req, res) => {
     failedLoginAttempts: 0,
     lastLogin: new Date().toISOString(),
     numberOfDisplayNameChanges: 0,
-    ageGroup: "UNKNOWN",
+    ageGroup: "ADULT",
     headless: false,
     country: "US",
     lastName: "User",

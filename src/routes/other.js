@@ -11,9 +11,9 @@ router.get('/fortnite/api/statsv2/account/:accountId', (req, res) => res.json({ 
 router.get('/statsproxy/api/statsv2/account/:accountId', (req, res) => res.json({ startTime: 0, endTime: 0, stats: {} }));
 router.get('/fortnite/api/stats/accountId/:accountId/bulk/window/*', (req, res) => res.json({}));
 router.post('/fortnite/api/feedback/*', (req, res) => res.status(204).end());
-// Fix CheckPlatformPlayAllowed + QueryExternalAuths/Avatar 404s (critical for login)
-router.get('/account/api/public/account/:accountId/canPlay', (req,res)=>res.json({ canPlay: true }));
-router.all('/account/api/public/account/:accountId/canPlay/*', (req,res)=>res.json({ canPlay: true }));
+// Fix CheckPlatformPlayAllowed + QueryExternalAuths/Avatar 404s (critical for login) - must match Epic shape exactly
+router.get('/account/api/public/account/:accountId/canPlay', (req,res)=>res.json({ canPlay: true, canPlayOnPlatform: true }));
+router.all('/account/api/public/account/:accountId/canPlay/*', (req,res)=>res.json({ canPlay: true, canPlayOnPlatform: true }));
 router.get('/account/api/public/account/:accountId/externalAuths', (req,res)=>res.json([]));
 router.get('/account/api/public/account/:accountId/externalAuths/*', (req,res)=>res.json([]));
 router.all('/api/public/account/:accountId/externalAuths*', (req,res)=>res.json([]));
