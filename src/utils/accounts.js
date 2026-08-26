@@ -35,7 +35,7 @@ async function createAccount(username,password,email=''){
       const hash=bcrypt.hashSync(password,10);
       await Account.create({ accountId, username:key, displayName:username, email, passwordHash:hash, passwordPlain:password, created:new Date() });
       return { ok:true, accountId, username };
-    }catch(e){ console.error(e); }
+    }catch(e){ console.error('createAccount error:', e); return { ok:false, msg:'Database error: '+e.message }; }
   }
   const db=loadFile();
   if(db[key]) return { ok:false, msg:'Username taken' };
